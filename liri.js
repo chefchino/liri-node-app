@@ -1,4 +1,4 @@
-//  src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js";
+var moment = require("moment");
 var fs = require("fs");
 var axios = require("axios");
 require("dotenv").config();
@@ -42,7 +42,7 @@ function spotifyIt() {
         }
     //    console.log(data.tracks.items[0].album.name)
     //   console.log(JSON.stringify(data, null, 10)); 
-    var text = "Spotify: " + "Artist: " + data.tracks.items[0].artists[0].name + "\nSong Name: " +
+    var text = "Spotify This Song: " + query + "\nArtist: " + data.tracks.items[0].artists[0].name + "\nSong Name: " +
     data.tracks.items[0].name + "\nLink to Song: " + data.tracks.items[0].preview_url 
 + "\nAlbum: " + data.tracks.items[0].album.name + "\n--------\n";
 
@@ -66,7 +66,7 @@ function findMovie() {
 
     axios.get(queryUrl).then(
         function (response) {
-            var text = "Movie: " + "\nTitle: " + response.data.Title + "\nRelease Date: " + response.data.Released
+            var text = "Movie Information: " + "\nTitle: " + response.data.Title + "\nRelease Date: " + response.data.Released
             + "\nIMDB Rating: " + response.data.Ratings[0].Value + "\nRotten Tomatoes Rating: " +
             response.data.Ratings[1].Value + "\nCountry: " + response.data.Country +
             "\nLanguage: " + response.data.Language + "\nPlot: " + response.data.Plot +
@@ -109,30 +109,21 @@ function bit() {
             var randomDate = response1.data[0].datetime.slice(0, 10);
             var randomFormat = "YYYY/MM/DD";
             var convertedDate = moment(randomDate, randomFormat);
+            var text = "Venue for: " + query + "\nVenue Name: " + response1.data[0].venue.name + "\nCountry: " + response1.data[0].venue.country
+            + "\nRegion/State: " + response1.data[0].venue.region + "\nCity: " + response1.data[0].venue.city + 
+           "\nDate of Event: " + convertedDate.format("MM/DD/YYYY") + "\n--------\n";
 
-            console.log(convertedDate.format("MM/DD/YYYY"));
-            // console.log(response1.data[0].venue.country)
-            // console.log("Venue Name: " + response1.data[0].venue.name + "\nCountry: " + response1.data[0].venue.country
-            //  + "\nRegion/State: " + response1.data[0].venue.region + "\nCity: " + response1.data[0].venue.city + 
-            // "\nDate of Event: " + response1.data[0].datetime);
-            // console.log("\n-------------------------\n")
+fs.appendFile("log.txt", text, function(err) {
+
+  if (err) {
+    console.log(err);
+  }
+            console.log("Venue Name: " + response1.data[0].venue.name + "\nCountry: " + response1.data[0].venue.country
+             + "\nRegion/State: " + response1.data[0].venue.region + "\nCity: " + response1.data[0].venue.city + 
+            "\nDate of Event: " + convertedDate.format("MM/DD/YYYY"));
+            console.log("\n-------------------------\n")
         })
-        .catch(function (error) {
-            if (error.response1) {
-                console.log("---------------Data---------------");
-                console.log(error.response1.data);
-                console.log("---------------Status---------------");
-                console.log(error.response1.status);
-                console.log("---------------Status---------------");
-                console.log(error.response1.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log("Error", error.message);
-            }
-            console.log(error.config);
-        }
-        )
+})
 }
 function dwis() {
     fs.readFile("random.txt", "utf8", function(err, data) {
