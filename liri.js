@@ -1,4 +1,5 @@
- src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js";
+//  src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js";
+var fs = require("fs");
 var axios = require("axios");
 require("dotenv").config();
 var Spotify = require('node-spotify-api');
@@ -23,6 +24,9 @@ function switchIt() {
         case "venue": bit()
             break;
 
+        case "do-what-it-says": dwis()
+            break;
+
         default:
             inquirerUser()
     }
@@ -38,12 +42,23 @@ function spotifyIt() {
         }
     //    console.log(data.tracks.items[0].album.name)
     //   console.log(JSON.stringify(data, null, 10)); 
+    var text = "Spotify: " + "Artist: " + data.tracks.items[0].artists[0].name + "\nSong Name: " +
+    data.tracks.items[0].name + "\nLink to Song: " + data.tracks.items[0].preview_url 
++ "\nAlbum: " + data.tracks.items[0].album.name + "\n--------\n";
+
+fs.appendFile("log.txt", text, function(err) {
+
+  if (err) {
+    console.log(err);
+  }
       console.log("Artist: " + data.tracks.items[0].artists[0].name + "\nSong Name: " +
           data.tracks.items[0].name + "\nLink to Song: " + data.tracks.items[0].preview_url 
     + "\nAlbum: " + data.tracks.items[0].album.name);
       console.log("\n-------------------------\n")
       
     });
+
+});
 }
 function findMovie() {
     console.log("you are trying to find this movie " + query)
@@ -51,6 +66,17 @@ function findMovie() {
 
     axios.get(queryUrl).then(
         function (response) {
+            var text = "Movie: " + "\nTitle: " + response.data.Title + "\nRelease Date: " + response.data.Released
+            + "\nIMDB Rating: " + response.data.Ratings[0].Value + "\nRotten Tomatoes Rating: " +
+            response.data.Ratings[1].Value + "\nCountry: " + response.data.Country +
+            "\nLanguage: " + response.data.Language + "\nPlot: " + response.data.Plot +
+            "\nActors: " + response.data.Actors + "\n--------\n";
+
+fs.appendFile("log.txt", text, function(err) {
+
+  if (err) {
+    console.log(err);
+  }
             console.log("Title: " + response.data.Title + "\nRelease Date: " + response.data.Released
                 + "\nIMDB Rating: " + response.data.Ratings[0].Value + "\nRotten Tomatoes Rating: " +
                 response.data.Ratings[1].Value + "\nCountry: " + response.data.Country +
@@ -73,6 +99,7 @@ function findMovie() {
             }
             console.log(error.config);
         });
+})
 }
 function bit() {
     console.log("you are trying to find this venue " + query)
@@ -106,6 +133,21 @@ function bit() {
             console.log(error.config);
         }
         )
+}
+function dwis() {
+    fs.readFile("random.txt", "utf8", function(err, data) {
+        if (err) {
+          return console.log(err);
+        }
+        var output = data.split(",");
+      
+        // Loop Through the newly created output array
+        for (var i = 0; i < output.length; i++) {
+            query = output[i];
+            spotifyIt();
+         
+        }
+      });
 }
 function inquirerUser() {
     console.log("you don't know how to use liri")
