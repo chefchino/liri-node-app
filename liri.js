@@ -11,7 +11,7 @@ var spotify = new Spotify({
 var [, , command] = process.argv// array destructuring
 var removed = process.argv.splice(0, 3)
 var query = process.argv.join(" ")
-//console.log(process.argv)
+
 switchIt()
 function switchIt() {
     switch (command) {
@@ -31,17 +31,14 @@ function switchIt() {
             inquirerUser()
     }
 }
-// console.log(3-3||"zero");
-// console.log(3-2||"zero");
-// console.log(process.env.SPOTIFYID);
+
 function spotifyIt() {
-    console.log("you are trying to spotify " + query);
+
     spotify.search({ type: 'track', query: query }, function(err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
         }
-    //    console.log(data.tracks.items[0].album.name)
-    //   console.log(JSON.stringify(data, null, 10)); 
+
     var text = "Spotify This Song: " + query + "\nArtist: " + data.tracks.items[0].artists[0].name + "\nSong Name: " +
     data.tracks.items[0].name + "\nLink to Song: " + data.tracks.items[0].preview_url 
 + "\nAlbum: " + data.tracks.items[0].album.name + "\n--------\n";
@@ -61,7 +58,7 @@ fs.appendFile("log.txt", text, function(err) {
 });
 }
 function findMovie() {
-    console.log("you are trying to find this movie " + query)
+
     var queryUrl = "http://www.omdbapi.com/?t=" + query + "&apikey=trilogy";
 
     axios.get(queryUrl).then(
@@ -102,9 +99,10 @@ fs.appendFile("log.txt", text, function(err) {
 })
 }
 function bit() {
-    console.log("you are trying to find this venue " + query)
+
     var bitURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp"
     axios.get(bitURL).then(
+
         function (response1) {
             var randomDate = response1.data[0].datetime.slice(0, 10);
             var randomFormat = "YYYY/MM/DD";
@@ -132,12 +130,13 @@ function dwis() {
         }
         var output = data.split(",");
       
-        // Loop Through the newly created output array
+
         for (var i = 0; i < output.length; i++) {
             query = output[i];
             spotifyIt();
          
         }
+        
       });
 }
 function inquirerUser() {
